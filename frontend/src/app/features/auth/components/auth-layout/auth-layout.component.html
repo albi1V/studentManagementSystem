@@ -1,0 +1,35 @@
+<main class="auth-layout">
+  <section class="brand-panel" aria-label="About Student Management System">
+    <div class="brand-content">
+      <a class="brand" routerLink="/login" aria-label="Student Management System home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M4 11.2 16 5l12 6.2L16 17.5 4 11.2Z"/><path d="M9 14.3v7.1c4.4 3.3 9.6 3.3 14 0v-7.1M28 11.5v8"/></svg>
+        </span>
+        <span>Student Management System</span>
+      </a>
+
+      <div class="brand-intro">
+        <p class="brand-kicker">A better day starts here</p>
+        <h1>{{ brandHeading }}</h1>
+        <p class="brand-description">{{ brandDescription }}</p>
+      </div>
+
+      <ul class="feature-list" aria-label="Platform features">
+        @for (feature of brandFeatures; track feature) {
+          <li><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span><span>{{ feature }}</span></li>
+        }
+      </ul>
+      <p class="brand-note"><span class="status-dot"></span> A clearer view of every school day</p>
+    </div>
+    <div class="brand-decoration" aria-hidden="true"><span></span><span></span><span></span></div>
+  </section>
+
+  <section class="form-panel">
+    <div class="mobile-brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M4 11.2 16 5l12 6.2L16 17.5 4 11.2Z"/><path d="M9 14.3v7.1c4.4 3.3 9.6 3.3 14 0v-7.1M28 11.5v8"/></svg></span><span>Student Management System</span></div>
+    <div class="form-content" [class.form-content-top]="alignContentTop"><ng-content /></div>
+    <footer class="auth-footer">
+      <span>© {{ currentYear }} Student Management System</span>
+      <nav aria-label="Legal information"><a href="#privacy" (click)="$event.preventDefault()">Privacy</a><span aria-hidden="true">·</span><a href="#terms" (click)="$event.preventDefault()">Terms</a></nav>
+    </footer>
+  </section>
+</main>

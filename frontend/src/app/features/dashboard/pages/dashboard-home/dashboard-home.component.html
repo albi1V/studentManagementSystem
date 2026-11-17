@@ -1,0 +1,227 @@
+﻿<div class="dashboard-shell">
+  @if (mobileMenuOpen) {
+    <button class="sidebar-backdrop" type="button" aria-label="Close navigation menu" (click)="closeMobileMenu()"></button>
+  }
+
+  <aside id="primary-sidebar" class="sidebar" [class.sidebar-open]="mobileMenuOpen" aria-label="Main navigation">
+    <a class="brand" routerLink="/dashboard" (click)="closeMobileMenu()" aria-label="Student Management dashboard">
+      <span class="brand-mark"><app-dashboard-icon name="graduation-cap" [size]="24" /></span>
+      <span class="brand-name">Student<span>Management</span></span>
+    </a>
+    <p class="nav-caption">WORKSPACE</p>
+    <nav class="side-nav">
+      <a class="nav-item" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="closeMobileMenu()">
+        <app-dashboard-icon name="layout-dashboard" /><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/students" routerLinkActive="active" (click)="closeMobileMenu()">
+        <app-dashboard-icon name="users-round" /><span>My Students</span>
+      </a>
+      <a class="nav-item" routerLink="/class-scheduling" routerLinkActive="active" (click)="closeMobileMenu()">
+        <app-dashboard-icon name="calendar-days" /><span>Class Scheduling</span>
+      </a>
+      <button class="nav-item disabled" type="button" disabled title="Attendance is not available yet">
+        <app-dashboard-icon name="clipboard-check" /><span>Attendance</span><span class="soon">Soon</span>
+      </button>
+      <button class="nav-item disabled" type="button" disabled title="Profile is not available yet">
+        <app-dashboard-icon name="user-round" /><span>Profile</span><span class="soon">Soon</span>
+      </button>
+    </nav>
+    <div class="sidebar-note"><span class="note-dot"></span><span>Teacher workspace</span></div>
+  </aside>
+
+  <div class="main-shell">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-toggle" type="button" (click)="toggleMobileMenu()" [attr.aria-expanded]="mobileMenuOpen" aria-controls="primary-sidebar" aria-label="Toggle navigation">
+          <app-dashboard-icon [name]="mobileMenuOpen ? 'close' : 'menu'" />
+        </button>
+        <span class="topbar-label">Teacher workspace</span>
+      </div>
+      <div class="topbar-right">
+        <button class="notification-button" type="button" disabled aria-label="Notifications are not available yet" title="Notifications are not available yet">
+          <app-dashboard-icon name="bell" />
+        </button>
+        <details class="profile-menu">
+          <summary aria-label="Open teacher profile menu">
+            <span class="avatar">{{ initials }}</span>
+            <span class="profile-name">{{ teacherName }}</span>
+            <app-dashboard-icon class="profile-chevron" name="chevron-down" [size]="16" />
+          </summary>
+          <div class="profile-popover">
+            <p class="profile-popover-name">{{ teacherName }}</p>
+            <p class="profile-popover-role">Teacher account</p>
+            <button type="button" (click)="logout()">Sign out</button>
+          </div>
+        </details>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      <section class="welcome">
+        <div class="welcome-copy-block">
+          <p class="eyebrow">OVERVIEW</p>
+          <h1>Welcome back, {{ teacherName }}</h1>
+          <p class="welcome-copy">Here&#39;s your teaching workspace at a glance.</p>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+          <span class="art-halo"></span>
+          <span class="art-plant"><i></i><i></i><i></i><b></b></span>
+          <span class="art-books"><i></i><i></i><i></i></span>
+          <app-dashboard-icon class="art-cap" name="graduation-cap" [size]="112" />
+          <app-dashboard-icon class="art-open-book" name="book-open" [size]="68" />
+        </div>
+      </section>
+
+      <section aria-labelledby="overview-title">
+        <div class="section-heading">
+          <div><h2 id="overview-title">Overview</h2><p>Class and student metrics will appear here when those modules are available.</p></div>
+        </div>
+        <div class="metric-grid">
+          <article class="metric-card students-metric">
+            <span class="metric-icon blue"><app-dashboard-icon name="users-round" [size]="22" /></span>
+            <div class="metric-copy"><p>Total Students</p>
+              <strong>{{ studentCountState === 'loading' ? '...'  : studentCountState === 'error' ? '-'  : studentCount }}</strong>
+              <small>{{ studentCountState === 'loading' ? 'Loading student total' : studentCountState === 'error' ? 'Total unavailable' : 'In your directory' }}</small>
+            </div>
+          </article>
+          <article class="metric-card">
+            <span class="metric-icon violet"><app-dashboard-icon name="calendar-clock" [size]="22" /></span>
+            <div class="metric-copy"><p>Today&#39;s Classes</p><strong class="unavailable">—</strong><small>Scheduling not available yet</small></div>
+          </article>
+          <article class="metric-card">
+            <span class="metric-icon green"><app-dashboard-icon name="circle-check" [size]="22" /></span>
+            <div class="metric-copy"><p>Completed Classes</p><strong class="unavailable">—</strong><small>Class tracking not available yet</small></div>
+          </article>
+          <article class="metric-card">
+            <span class="metric-icon amber"><app-dashboard-icon name="hourglass" [size]="22" /></span>
+            <div class="metric-copy"><p>Pending Classes</p><strong class="unavailable">—</strong><small>Class tracking not available yet</small></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="students-shortcut" aria-labelledby="students-shortcut-title">
+        <span class="shortcut-icon"><app-dashboard-icon name="users-round" [size]="24" /></span>
+        <div class="shortcut-copy">
+          <p class="eyebrow">YOUR DIRECTORY</p><h2 id="students-shortcut-title">My Students</h2>
+          <p>Manage the students connected to your teaching.</p>
+        </div>
+        <div class="shortcut-total">
+          <span>Total Students</span>
+          <strong>{{ studentCountState === 'loaded' ? studentCount : '-'  }}</strong>
+        </div>
+        <div class="shortcut-actions">
+          <a class="shortcut-view" routerLink="/students"><app-dashboard-icon name="eye" [size]="17" />View Students</a>
+          <a class="shortcut-add" routerLink="/students/new"><app-dashboard-icon name="plus" [size]="17" />Add Student</a>
+        </div>
+      </section>
+
+      <a class="class-scheduling-card" routerLink="/class-scheduling" aria-label="Class Scheduling. Schedule classes and manage your upcoming lessons.">
+        <span class="shortcut-icon"><app-dashboard-icon name="calendar-clock" [size]="24" /></span>
+        <span class="shortcut-copy">
+          <span class="eyebrow">YOUR LESSONS</span>
+          <span class="class-scheduling-card-title">Class Scheduling</span>
+          <span class="class-scheduling-card-description">Schedule classes and manage your upcoming lessons.</span>
+        </span>
+        <span class="class-scheduling-card-action">Open scheduling <span aria-hidden="true">→</span></span>
+      </a>
+
+      <button #converterCard class="class-scheduling-card timezone-card" type="button" (click)="openConverter()" aria-haspopup="dialog" aria-controls="timezone-dialog">
+        <span class="shortcut-icon"><app-dashboard-icon name="globe" [size]="24" /></span>
+        <span class="shortcut-copy">
+          <span class="eyebrow">TIMEZONE TOOL</span>
+          <span class="class-scheduling-card-title">Time Zone Converter</span>
+          <span class="class-scheduling-card-description">Convert Indian time into your student&#39;s local time.</span>
+        </span>
+        <span class="class-scheduling-card-action">Open converter <span aria-hidden="true">→</span></span>
+      </button>
+
+      <section class="dashboard-scheduling" aria-label="Class scheduling">
+        <app-class-scheduling [embedded]="true" [showForm]="false" />
+      </section>
+
+      <section class="lower-grid" aria-label="Schedule and getting started">
+        <article class="panel schedule-panel">
+          <div class="panel-heading">
+            <span class="panel-icon blue"><app-dashboard-icon name="calendar-days" [size]="22" /></span>
+            <div><h2>Class Scheduling</h2><p>Use the navigation card above to schedule your next class.</p></div>
+          </div>
+          <div class="empty-state">
+            <span class="schedule-art"><app-dashboard-icon name="calendar-clock" [size]="48" /></span>
+            <strong>Schedule across timezones</strong>
+            <p>Your upcoming classes are listed above.</p>
+          </div>
+        </article>
+        <article class="panel getting-started-panel">
+          <div class="panel-heading">
+            <span class="panel-icon blue"><app-dashboard-icon name="rocket" [size]="23" /></span>
+            <div><h2>Getting started</h2><p>Your workspace is ready.</p></div>
+          </div>
+          <div class="getting-started">
+            <span class="step-number complete">1</span>
+            <div><strong>Teacher account verified</strong><p>You&#39;re signed in as {{ teacherName }}.</p></div>
+            <app-dashboard-icon class="complete-mark" name="circle-check" [size]="20" />
+          </div>
+          <div class="getting-started muted">
+            <span class="step-number">2</span>
+            <div><strong>Connect your teaching tools</strong><p>Student and class modules will appear here when available.</p></div>
+          </div>
+        </article>
+      </section>
+      <footer class="dashboard-footer">Student Management <span>&middot;</span> Teacher workspace</footer>
+    </main>
+  </div>
+</div>
+
+@if (converterOpen) {
+  <div class="timezone-overlay" (click)="closeConverter()">
+    <section #converterDialog id="timezone-dialog" class="timezone-dialog" role="dialog" aria-modal="true" aria-labelledby="timezone-title" (click)="$event.stopPropagation()" (keydown)="trapConverterFocus($event)">
+      <header class="timezone-dialog-header">
+        <div class="timezone-heading-icon"><app-dashboard-icon name="globe" [size]="23" /></div>
+        <div><p class="eyebrow">TIMEZONE TOOL</p><h2 id="timezone-title">Time Zone Converter</h2><p>See your student&#39;s local time at a glance.</p></div>
+        <button class="timezone-close" type="button" (click)="closeConverter()" aria-label="Close time zone converter"><app-dashboard-icon name="close" [size]="20" /></button>
+      </header>
+
+      <div class="timezone-dialog-body">
+        @if (converterState === 'loading') {
+          <div class="converter-state" role="status">Loading your active students…</div>
+        } @else if (converterState === 'error') {
+          <div class="converter-notice error" role="alert">{{ converterError || 'Students could not be loaded. Check your connection and try again.' }}<button type="button" (click)="loadConverterStudents()">Retry</button></div>
+        } @else if (converterStudents.length === 0) {
+          <div class="converter-empty"><strong>No active students yet</strong><p>Add or activate a student to use the converter.</p><a routerLink="/students" (click)="closeConverter()">Go to My Students <span aria-hidden="true">→</span></a></div>
+        } @else {
+          <div class="converter-fields">
+            <label class="converter-field" for="converter-student"><span>Student</span>
+              <select #converterStudent id="converter-student" [(ngModel)]="converterStudentId" (ngModelChange)="converterChanged()">
+                <option value="">Select a student</option>
+                @for (student of converterStudents; track student.id) { <option [value]="student.id">{{ student.fullName }} — {{ student.city || 'City not provided' }}, {{ student.country || 'Country not provided' }}</option> }
+              </select>
+            </label>
+            @if (converterStudentRecord) {
+              <div class="converter-location"><app-dashboard-icon name="map-pin" [size]="18" /><span><strong>{{ converterStudentRecord.city || 'City not provided' }}{{ converterStudentRecord.country ? ', ' + converterStudentRecord.country : '' }}</strong><small>{{ converterStudentRecord.timeZoneId || 'Timezone not provided' }}</small></span></div>
+            }
+            <div class="converter-field-row">
+              <label class="converter-field" for="converter-date"><span>Date</span><input id="converter-date" type="date" [(ngModel)]="converterDate" (ngModelChange)="converterChanged()"></label>
+              <label class="converter-field" for="converter-time"><span>Time</span><input id="converter-time" type="time" [(ngModel)]="converterTime" (ngModelChange)="converterChanged()"></label>
+            </div>
+            <div class="teacher-zone-label"><app-dashboard-icon name="calendar-clock" [size]="17" /><span>Teacher Time – IST (Asia/Kolkata)</span></div>
+          </div>
+
+          @if (!converterStudentRecord) {
+            <div class="converter-result-placeholder">Choose a student to see their local date and time.</div>
+          } @else if (conversion) {
+            <section class="converter-result" aria-live="polite" aria-label="Student local time">
+              <p class="eyebrow">STUDENT LOCAL TIME</p>
+              <div class="converted-time"><strong>{{ conversion.time }}</strong><span>{{ conversion.zone }}</span></div>
+              <div class="converted-date">{{ conversion.date }}</div>
+              <div class="result-location"><app-dashboard-icon name="map-pin" [size]="16" />{{ converterStudentRecord.city || 'City not provided' }}{{ converterStudentRecord.country ? ', ' + converterStudentRecord.country : '' }}</div>
+              <small class="result-zone-id">{{ converterStudentRecord.timeZoneId }}</small>
+              <button class="copy-result" type="button" (click)="copyConversion()"><app-dashboard-icon [name]="copyConfirmation ? 'circle-check' : 'copy'" [size]="17" />{{ copyConfirmation ? 'Copied!' : 'Copy Result' }}</button>
+            </section>
+          } @else if (converterError) {
+            <div class="converter-notice error" role="alert">{{ converterError }}</div>
+          }
+        }
+      </div>
+    </section>
+  </div>
+}

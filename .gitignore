@@ -1,0 +1,33 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Frontend - Angular / Node
+node_modules/
+.angular/
+dist/
+coverage/
+.npm/
+
+# Backend - .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# IDE and editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*

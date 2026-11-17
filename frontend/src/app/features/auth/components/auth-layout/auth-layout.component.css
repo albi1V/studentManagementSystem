@@ -1,0 +1,29 @@
+:host { display: block; min-height: 100dvh; }
+.auth-layout { min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(28rem, .96fr); background: #fff; }
+.brand-panel { position: relative; isolation: isolate; display: flex; overflow: hidden; padding: clamp(2.5rem, 6vw, 6.75rem); color: #fff; background: #102b50; }
+.brand-content { z-index: 1; display: flex; flex-direction: column; width: min(100%, 36rem); margin: auto; }
+.brand { display: inline-flex; align-items: center; gap: .8rem; width: fit-content; color: #fff; font-size: .98rem; font-weight: 650; letter-spacing: -.015em; text-decoration: none; }
+.brand-mark { display: grid; width: 2.6rem; height: 2.6rem; flex: 0 0 auto; place-items: center; border: 1px solid rgb(255 255 255 / 24%); border-radius: .8rem; color: #fff; background: rgb(255 255 255 / 10%); }
+.brand-mark svg { width: 1.55rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.brand-intro { margin-top: clamp(4rem, 9vh, 7rem); }
+.brand-kicker { margin: 0 0 1.15rem; color: #9fc8ff; font-size: .78rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.brand-intro h1 { margin: 0; font-size: clamp(2.4rem, 4vw, 4rem); font-weight: 650; letter-spacing: -.055em; line-height: 1.12; }
+.brand-description { max-width: 31rem; margin: 1.5rem 0 0; color: #c6d4e6; font-size: 1.04rem; line-height: 1.8; }
+.feature-list { display: grid; gap: 1.05rem; margin: 2.6rem 0 0; padding: 0; list-style: none; }
+.feature-list li { display: flex; align-items: center; gap: .9rem; color: #edf4fc; font-size: .93rem; font-weight: 550; }
+.feature-icon { display: grid; width: 2.45rem; height: 2.45rem; place-items: center; border: 1px solid rgb(255 255 255 / 14%); border-radius: .7rem; color: #a7ceff; background: rgb(255 255 255 / 7%); }
+.feature-icon svg { width: 1.2rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
+.brand-note { display: flex; align-items: center; gap: .55rem; margin: auto 0 0; padding-top: 3rem; color: #9eb1c9; font-size: .8rem; }
+.status-dot { width: .45rem; height: .45rem; border-radius: 50%; background: #70d7b0; box-shadow: 0 0 0 .25rem rgb(112 215 176 / 12%); }
+.brand-decoration { position: absolute; z-index: -1; right: -8rem; bottom: -15rem; width: 34rem; height: 34rem; border: 1px solid rgb(167 206 255 / 10%); border-radius: 50%; }
+.brand-decoration::before,.brand-decoration::after,.brand-decoration span { position: absolute; inset: 2.2rem; border: 1px solid rgb(167 206 255 / 8%); border-radius: 50%; content: ''; }
+.brand-decoration::after { inset: 4.4rem; }.brand-decoration span:nth-child(1) { inset: 6.6rem; }.brand-decoration span:nth-child(2) { inset: 8.8rem; }.brand-decoration span:nth-child(3) { inset: 11rem; }
+.form-panel { display: flex; min-width: 0; min-height: 100dvh; flex-direction: column; align-items: center; padding: 2.25rem clamp(1.5rem, 5vw, 5.5rem) 1.5rem; }
+.form-content { display: flex; width: min(100%, 27rem); flex: 1; flex-direction: column; justify-content: center; padding: 3rem 0; }
+.form-content.form-content-top { justify-content: flex-start; }
+.mobile-brand { display: none; }
+.auth-footer { display: flex; width: min(100%, 27rem); align-items: center; justify-content: space-between; gap: 1rem; color: #8793a3; font-size: .75rem; }
+.auth-footer nav { display: flex; gap: .55rem; align-items: center; }.auth-footer a { color: inherit; text-decoration: none; }.auth-footer a:hover { color: #315d91; }
+@media (max-width: 900px) { .auth-layout { grid-template-columns: minmax(0, .9fr) minmax(25rem, 1.1fr); }.brand-panel { padding: 2.5rem; }.brand-intro h1 { font-size: clamp(2.15rem, 4.3vw, 3rem); }.form-panel { padding-inline: 2rem; } }
+@media (max-width: 767px) { .auth-layout { display: block; }.brand-panel { display: none; }.form-panel { min-height: 100dvh; padding: 1.5rem clamp(1.25rem, 6vw, 2rem) 1.25rem; }.mobile-brand { display: flex; width: min(100%, 27rem); align-items: center; gap: .7rem; color: #17365d; font-size: .9rem; font-weight: 650; }.mobile-brand .brand-mark { width: 2.4rem; height: 2.4rem; border-color: #d9e5f2; color: #17365d; background: #eff5fc; }.form-content { padding-block: 2.5rem; }.auth-footer { flex-wrap: wrap; } }
+@media (max-width: 360px) { .auth-footer { font-size: .7rem; } }

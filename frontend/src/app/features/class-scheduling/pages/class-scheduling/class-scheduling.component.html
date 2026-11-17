@@ -1,0 +1,66 @@
+<div [class.dashboard-shell]="!embedded" [class.embedded-scheduling]="embedded">
+  @if (!embedded && mobileMenuOpen) { <button class="sidebar-backdrop" type="button" aria-label="Close navigation" (click)="closeMobileMenu()"></button> }
+  @if (!embedded) {
+  <aside id="primary-sidebar" class="sidebar" [class.sidebar-open]="mobileMenuOpen" aria-label="Main navigation">
+    <a class="brand" routerLink="/dashboard" (click)="closeMobileMenu()" aria-label="Student Management dashboard"><span class="brand-mark"><app-dashboard-icon name="graduation-cap" [size]="24" /></span><span class="brand-name">Student<span>Management</span></span></a>
+    <p class="nav-caption">WORKSPACE</p>
+    <nav class="side-nav">
+      <a class="nav-item" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="closeMobileMenu()"><app-dashboard-icon name="layout-dashboard" /><span>Dashboard</span></a>
+      <a class="nav-item" routerLink="/students" routerLinkActive="active" (click)="closeMobileMenu()"><app-dashboard-icon name="users-round" /><span>My Students</span></a>
+      <a class="nav-item" routerLink="/class-scheduling" routerLinkActive="active" (click)="closeMobileMenu()"><app-dashboard-icon name="calendar-days" /><span>Class Scheduling</span></a>
+      <button class="nav-item disabled" type="button" disabled><app-dashboard-icon name="clipboard-check" /><span>Attendance</span><span class="soon">Soon</span></button>
+      <button class="nav-item disabled" type="button" disabled><app-dashboard-icon name="user-round" /><span>Profile</span><span class="soon">Soon</span></button>
+    </nav>
+    <div class="sidebar-note"><span class="note-dot"></span><span>Teacher workspace</span></div>
+  </aside>
+  }
+  <div [class.main-shell]="!embedded">
+    @if (!embedded) {
+    <header class="topbar"><div class="topbar-left"><button class="mobile-menu-toggle" type="button" (click)="toggleMobileMenu()" [attr.aria-expanded]="mobileMenuOpen" aria-controls="primary-sidebar" aria-label="Toggle navigation"><app-dashboard-icon [name]="mobileMenuOpen ? 'close' : 'menu'" /></button><span class="topbar-label">Teacher workspace</span></div><div class="topbar-right"><details class="profile-menu"><summary aria-label="Open teacher profile menu"><span class="avatar">{{ initials }}</span><span class="profile-name">{{ teacherName }}</span><app-dashboard-icon class="profile-chevron" name="chevron-down" [size]="16" /></summary><div class="profile-popover"><p class="profile-popover-name">{{ teacherName }}</p><p class="profile-popover-role">Teacher account</p><button type="button" (click)="logout()">Sign out</button></div></details></div></header>
+    }
+    <main [class.dashboard-content]="!embedded" [class.scheduling-content]="!embedded">
+      @if (showForm) {
+      <section class="page-heading"><div><p class="eyebrow">TEACHING WORKSPACE</p><h1>Class Scheduling</h1><p class="welcome-copy">Plan a class in your local time and see the student's local time update automatically.</p></div><span class="heading-icon"><app-dashboard-icon name="calendar-clock" [size]="28" /></span></section>
+      <section class="schedule-panel" aria-labelledby="create-title">
+        <div class="panel-heading"><span class="panel-icon blue"><app-dashboard-icon name="calendar-plus" [size]="22" /></span><div><h2 id="create-title">Schedule a class</h2><p>All times are calculated using the student's saved timezone.</p></div></div>
+        @if (studentState === 'loading') { <div class="inline-state">Loading students...</div> }
+        @if (studentState === 'error') { <div class="notice error" role="alert">Unable to load students. Please try again. <button type="button" (click)="loadStudents()">Retry</button></div> }
+        @if (studentState === 'loaded' && students.length === 0) { <div class="empty-state"><span class="schedule-art"><app-dashboard-icon name="users-round" [size]="38" /></span><strong>No active students found. Add a student before scheduling a class.</strong><p>Students with a saved timezone will appear here.</p><a routerLink="/students/new">Add Student</a></div> }
+        @if (students.length > 0) {
+          <form #scheduleForm="ngForm" class="schedule-form" (ngSubmit)="schedule(scheduleForm)">
+          <div class="form-grid">
+            <label class="field student-field"><span>Student</span><select name="studentId" [(ngModel)]="studentId" (ngModelChange)="changed()" required><option value="" disabled>Select a student</option>@for (student of students; track student.id) { <option [value]="student.id">{{ student.fullName }}{{ student.city ? ' · ' + student.city : '' }}{{ student.country ? ', ' + student.country : '' }}</option> }</select></label>
+            @if (selectedStudent) { <div class="student-timezone"><app-dashboard-icon name="map-pin" [size]="18" /><span><strong>{{ selectedStudent.city || 'Location not set' }}{{ selectedStudent.country ? ', ' + selectedStudent.country : '' }}</strong><small>{{ selectedStudent.timeZoneId }}</small></span></div> }
+            <label class="field"><span>Teacher Date (IST · Asia/Kolkata)</span><input name="teacherDate" type="date" [min]="todayInIst" [(ngModel)]="teacherDate" (ngModelChange)="changed()" required /></label>
+            <label class="field"><span>Teacher Time (IST)</span><input name="teacherTime" type="time" [(ngModel)]="teacherTime" (ngModelChange)="changed()" required /></label>
+            <label class="field"><span>Duration</span><select name="durationMinutes" [(ngModel)]="durationMinutes" (ngModelChange)="changed()"><option [ngValue]="30">30 minutes</option><option [ngValue]="45">45 minutes</option><option [ngValue]="60">60 minutes</option><option [ngValue]="90">90 minutes</option></select></label>
+            <label class="field description-field"><span>Description <small>Optional</small></span><textarea name="description" maxlength="500" rows="3" [(ngModel)]="description" placeholder="e.g. Mathematics — Algebra practice"></textarea></label>
+          </div>
+          <section class="conversion-card" aria-live="polite" aria-label="Class time preview">
+            <div class="conversion-heading"><div><p class="eyebrow">TIME CONVERSION</p><h3>Both calendars, one class</h3></div>@if (loadingPreview) { <span class="loading-label">Updating…</span> }</div>
+            @if (preview) {
+              <div class="time-columns">
+                <article class="time-side"><span class="time-zone-label">TEACHER · IST</span><strong>{{ format(preview.teacherStart, preview.teacherTimeZoneId, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) }}</strong><b>{{ format(preview.teacherStart, preview.teacherTimeZoneId, { hour: 'numeric', minute: '2-digit' }) }} – {{ format(preview.teacherEnd, preview.teacherTimeZoneId, { hour: 'numeric', minute: '2-digit' }) }}</b><small>{{ preview.teacherTimeZoneId }}</small></article>
+                <span class="conversion-arrow"><app-dashboard-icon name="arrow-right-left" [size]="20" /></span>
+                <article class="time-side student-side"><span class="time-zone-label">STUDENT · LOCAL TIME</span><strong>{{ format(preview.studentStart, preview.studentTimeZoneId, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) }}</strong><b>{{ format(preview.studentStart, preview.studentTimeZoneId, { hour: 'numeric', minute: '2-digit' }) }} – {{ format(preview.studentEnd, preview.studentTimeZoneId, { hour: 'numeric', minute: '2-digit' }) }}</b><small>{{ selectedStudent?.city }}{{ selectedStudent?.city && selectedStudent?.country ? ', ' : '' }}{{ selectedStudent?.country }} · {{ preview.studentTimeZoneId }}</small></article>
+              </div>
+            } @else { <p class="preview-placeholder">Choose a student, date and time to preview the local class time.</p> }
+          </section>
+          @if (error) { <div class="notice error" role="alert">{{ error }}</div> }
+          @if (success) { <div class="notice success" role="status">{{ success }}</div> }
+          <div class="form-actions"><p>Class time is checked against the student's schedule before saving.</p><button class="schedule-button" type="submit" [disabled]="!canSubmit"><app-dashboard-icon name="calendar-check" [size]="18" />{{ submitting ? 'Scheduling…' : 'Schedule Class' }}</button></div>
+          </form>
+        }
+      </section>
+      }
+      <section class="schedule-panel upcoming-panel" aria-labelledby="upcoming-title">
+        <div class="panel-heading"><span class="panel-icon violet"><app-dashboard-icon name="calendar-clock" [size]="22" /></span><div><h2 id="upcoming-title">Upcoming classes</h2><p>Scheduled classes with both teacher and student local times.</p></div></div>
+        @if (classesState === 'loading') { <div class="inline-state">Loading scheduled classes…</div> }
+        @if (classesState === 'error') { <div class="notice error" role="alert">Unable to load scheduled classes. Please try again. <button type="button" (click)="loadClasses()">Retry</button></div> }
+        @if (classesState === 'loaded' && classes.length === 0) { <div class="empty-state compact"><strong>No upcoming classes scheduled yet.</strong></div> }
+        @if (classes.length > 0) { <div class="class-list">@for (item of classes; track item.id) { <article class="class-row"><div class="class-student"><strong>{{ item.studentName }}</strong><span>{{ item.city }}{{ item.city && item.country ? ', ' : '' }}{{ item.country }}</span></div><div class="class-time"><small>TEACHER · IST</small><strong>{{ format(item.teacherStart, item.teacherTimeZoneId, { day: 'numeric', month: 'short', year: 'numeric' }) }} · {{ format(item.teacherStart, item.teacherTimeZoneId, { hour: 'numeric', minute: '2-digit' }) }}</strong></div><div class="class-time"><small>STUDENT · {{ item.studentTimeZoneId }}</small><strong>{{ format(item.studentStart, item.studentTimeZoneId, { day: 'numeric', month: 'short', year: 'numeric' }) }} · {{ format(item.studentStart, item.studentTimeZoneId, { hour: 'numeric', minute: '2-digit' }) }}</strong></div><div class="class-meta"><span>{{ item.durationMinutes }} min</span><span class="status-pill">{{ item.status }}</span>@if (item.description) { <small>{{ item.description }}</small> }</div></article> }</div> }
+      </section>
+      @if (!embedded) { <footer class="dashboard-footer">Student Management <span>&middot;</span> Teacher workspace</footer> }
+    </main>
+  </div>
+</div>

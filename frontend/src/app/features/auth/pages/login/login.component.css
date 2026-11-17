@@ -1,0 +1,31 @@
+:host { display: block; }
+.login-heading { margin-bottom: 2.15rem; }
+.eyebrow { margin: 0 0 .65rem; color: #4c78a8; font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+h2 { margin: 0; color: #16283e; font-size: clamp(1.9rem, 4vw, 2.25rem); font-weight: 650; letter-spacing: -.045em; line-height: 1.2; }
+.subtitle { margin: .7rem 0 0; color: #718096; font-size: .93rem; line-height: 1.6; }
+form { display: grid; gap: 1.35rem; }
+.field-group { display: grid; gap: .5rem; }
+.field-label { color: #27364a; font-size: .86rem; font-weight: 600; }
+.field-group > input { width: 100%; height: 3.15rem; padding: 0 .95rem; border: 1px solid #d8e0e9; border-radius: .65rem; outline: none; color: #18283d; background: #fff; font: inherit; font-size: .92rem; transition: border-color .15s ease, box-shadow .15s ease; }
+.field-group > input::placeholder { color: #9aa6b5; }
+.field-group > input:hover { border-color: #aebdce; }
+.field-group > input:focus { border-color: #477ab8; box-shadow: 0 0 0 3px rgb(71 122 184 / 14%); }
+.field-group > input[aria-invalid="true"] { border-color: #c84d56; }
+.password-group { gap: .5rem; }
+.field-error { margin: -.15rem 0 0; color: #b33a45; font-size: .78rem; line-height: 1.45; }
+.form-options { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: -.15rem; }
+.remember-option { display: inline-flex; align-items: center; gap: .55rem; color: #536276; cursor: pointer; font-size: .84rem; }
+.remember-option input { width: 1rem; height: 1rem; margin: 0; accent-color: #285b91; }
+.text-link,.register-prompt a { color: #315f94; font-size: .84rem; font-weight: 600; text-decoration: none; }
+.text-link:hover,.register-prompt a:hover { color: #1c426d; text-decoration: underline; text-underline-offset: 3px; }
+.sign-in-button { display: inline-flex; min-height: 3.2rem; align-items: center; justify-content: center; gap: .6rem; margin-top: .15rem; border: 1px solid #173d69; border-radius: .65rem; color: #fff; background: #173d69; cursor: pointer; font: inherit; font-size: .92rem; font-weight: 650; transition: background .15s ease, border-color .15s ease, transform .15s ease; }
+.sign-in-button:hover:not(:disabled) { transform: translateY(-1px); border-color: #102f53; background: #102f53; }
+.sign-in-button:focus-visible { outline: 3px solid rgb(71 122 184 / 35%); outline-offset: 2px; }
+.sign-in-button:disabled { border-color: #bcc8d6; color: #f7f9fb; background: #bcc8d6; cursor: not-allowed; }
+.pending-note { margin: -.75rem 0 0; color: #8995a3; font-size: .73rem; text-align: center; }
+.form-notice { margin: -.15rem 0; padding: .7rem .8rem; border: 1px solid #cbdced; border-radius: .55rem; color: #315678; background: #f2f7fc; font-size: .8rem; line-height: 1.5; }
+.spinner { width: 1rem; height: 1rem; border: 2px solid rgb(255 255 255 / 45%); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.register-prompt { margin: 1.8rem 0 0; color: #718096; font-size: .84rem; text-align: center; }
+.register-prompt a { margin-left: .15rem; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }

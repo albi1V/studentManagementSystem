@@ -1,0 +1,9 @@
+.embedded-scheduling {
+  display: block;
+  min-width: 0;
+  margin-top: 16px;
+}
+
+.embedded-scheduling main {
+  width: 100%;
+}

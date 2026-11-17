@@ -1,0 +1,69 @@
+<app-auth-layout>
+  <section class="verification-page" aria-labelledby="verify-title">
+    <header class="verify-heading">
+      <p class="eyebrow">Email verification</p>
+      <h2 id="verify-title">Verify your email address</h2>
+      <p class="subtitle">We’ve sent a verification code to your email address. Enter the code below to verify your account.</p>
+    </header>
+
+    @if (contextMissing) {
+      <p class="feedback error" role="alert">{{ message }}</p>
+      <a class="primary-link" routerLink="/register" (click)="cancelAndRegister()">Start registration</a>
+    } @else {
+      @if (email) {
+        <p class="delivery-note">Code sent to <strong>{{ maskedEmail }}</strong></p>
+      } @else {
+        <p class="delivery-note">Enter the code sent to the email address used for registration.</p>
+      }
+
+      <form (submit)="$event.preventDefault(); verify()" novalidate>
+        <div class="otp-field">
+          <label for="verification-code">6-digit verification code</label>
+          <input
+            id="verification-code"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            pattern="[0-9]{6}"
+            maxlength="6"
+            placeholder="000000"
+            [formControl]="otp"
+            [attr.aria-invalid]="otp.touched && otp.invalid"
+            [attr.aria-describedby]="otp.touched && otp.invalid ? 'otp-error' : 'otp-help'"
+            (input)="updateOtp($any($event.target).value)" />
+          <p class="input-hint" id="otp-help">Enter the six numbers from the email. You can paste the code here.</p>
+          @if (otp.touched && otp.hasError('required')) {
+            <p class="field-error" id="otp-error">Enter the verification code.</p>
+          } @else if (otp.touched && otp.invalid) {
+            <p class="field-error" id="otp-error">Enter all 6 digits of your code.</p>
+          }
+        </div>
+
+        @if (message) {
+          <p class="feedback" [class.error]="messageKind === 'error'" [class.success]="messageKind === 'success'" role="status" aria-live="polite">{{ message }}</p>
+        }
+
+        <button class="verify-button" type="submit" [disabled]="otp.invalid || verifying">
+          @if (verifying) { <span class="spinner" aria-hidden="true"></span> Verifying… } @else { Verify email }
+        </button>
+      </form>
+
+      <div class="resend-row">
+        <span>Didn’t receive an email?</span>
+        @if (secondsUntilResend > 0) {
+          <span class="countdown" aria-live="off">Resend in {{ formattedCountdown }}</span>
+        } @else {
+          <button class="text-button" type="button" [disabled]="resending" (click)="resend()">
+            @if (resending) { Sending… } @else { Resend code }
+          </button>
+        }
+      </div>
+
+      <nav class="secondary-links" aria-label="Other account options">
+        <a routerLink="/register" (click)="cancelAndRegister()">Change email</a>
+        <span aria-hidden="true">·</span>
+        <a routerLink="/login" (click)="backToLogin()">Back to login</a>
+      </nav>
+    }
+  </section>
+</app-auth-layout>

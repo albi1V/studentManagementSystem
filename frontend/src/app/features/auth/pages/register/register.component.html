@@ -1,0 +1,86 @@
+<app-auth-layout
+  [alignContentTop]="true"
+  brandHeading="Start managing your teaching journey."
+  brandDescription="Create your teacher account to organize students, schedule classes and manage your teaching activities in one place."
+  [brandFeatures]="['Organize your students', 'Schedule one-to-one classes', 'Track attendance and class history']">
+  <section class="registration-page" aria-labelledby="register-title">
+    <header class="register-heading">
+      <p class="eyebrow">Teacher portal</p>
+      <h2 id="register-title">Create your teacher account</h2>
+      <p class="subtitle">Enter your details to get started.</p>
+    </header>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="submit()" novalidate>
+      <div class="field-group">
+        <label class="field-label" for="full-name">Full name</label>
+        <input id="full-name" type="text" formControlName="fullName" autocomplete="name" placeholder="Your full name" maxlength="100"
+          [attr.aria-invalid]="fullName.invalid && fullName.touched"
+          [attr.aria-describedby]="fullName.invalid && fullName.touched ? 'name-error' : null" />
+        @if (fullName.touched && fullName.hasError('required')) {
+          <p class="field-error" id="name-error">Enter your full name.</p>
+        } @else if (fullName.touched && fullName.hasError('minlength')) {
+          <p class="field-error" id="name-error">Your name must be at least 2 characters.</p>
+        }
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="register-email">Email address</label>
+        <input id="register-email" type="email" formControlName="email" autocomplete="email" placeholder="you@school.edu"
+          [attr.aria-invalid]="email.invalid && email.touched"
+          [attr.aria-describedby]="email.invalid && email.touched ? 'register-email-error' : null"
+          (blur)="trimEmail()" />
+        @if (email.touched && email.hasError('required')) {
+          <p class="field-error" id="register-email-error">Enter your email address.</p>
+        } @else if (email.touched && email.hasError('email')) {
+          <p class="field-error" id="register-email-error">Enter a valid email address.</p>
+        }
+      </div>
+
+      <div class="password-section">
+        <app-password-field formControlName="password" inputId="register-password" label="Password" placeholder="Create a password"
+          [invalid]="password.invalid && password.touched"
+          [describedBy]="password.touched && password.invalid ? 'password-requirements password-error' : 'password-requirements'" />
+        <ul class="password-requirements" id="password-requirements" aria-label="Password requirements">
+          @for (requirement of passwordChecks; track requirement.label) {
+            <li [class.met]="requirement.met"><span class="requirement-icon" aria-hidden="true">{{ requirement.met ? '✓' : '○' }}</span>{{ requirement.label }}</li>
+          }
+        </ul>
+        @if (password.touched && password.invalid) {
+          <p class="field-error" id="password-error">Your password must meet every requirement above.</p>
+        }
+      </div>
+
+      <div class="password-section confirm-section">
+        <app-password-field formControlName="confirmPassword" inputId="confirm-password" label="Confirm password" placeholder="Enter your password again"
+          [invalid]="(confirmPassword.invalid || passwordMismatch) && confirmPassword.touched"
+          [describedBy]="(confirmPassword.invalid || passwordMismatch) && confirmPassword.touched ? 'confirm-password-error' : null" />
+        @if (confirmPassword.touched && confirmPassword.hasError('required')) {
+          <p class="field-error" id="confirm-password-error">Confirm your password.</p>
+        } @else if (passwordMismatch) {
+          <p class="field-error" id="confirm-password-error">The passwords don’t match yet.</p>
+        }
+      </div>
+
+      <div class="terms-section">
+        <label class="terms-option">
+          <input type="checkbox" formControlName="termsAccepted" />
+          <span>I agree to the <a href="#terms" (click)="$event.preventDefault()">Terms and Conditions</a> and <a href="#privacy" (click)="$event.preventDefault()">Privacy Policy</a>.</span>
+        </label>
+        @if (termsAccepted.touched && termsAccepted.hasError('required')) {
+          <p class="field-error">Please accept the terms to continue.</p>
+        }
+      </div>
+
+      @if (notice) {
+        <p class="form-notice" role="status">{{ notice }}</p>
+      }
+
+      <button class="register-button" type="submit" [disabled]="registrationForm.invalid || submitting">
+        @if (submitting) { <span class="spinner" aria-hidden="true"></span> Creating account… } @else { Create account }
+      </button>
+      <p class="pending-note">Your account is created only after email verification.</p>
+    </form>
+
+    <p class="signin-prompt">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </section>
+</app-auth-layout>
