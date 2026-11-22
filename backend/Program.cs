@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddCors(options => options.AddPolicy("frontend", policy =>
 {
-    var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200"];
+    var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["https://studentmanagement-d96.pages.dev"];
     policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
 }));
 builder.Services.AddRateLimiter(options =>
